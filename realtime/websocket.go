@@ -152,7 +152,7 @@ func Connect(ctx context.Context, ch chan Response, channels, symbols []string, 
 
 	eg, ctx := errgroup.WithContext(ctx)
 	eg.Go(func() error {
-		defer l.Printf("[INFO]: subscribe gorutine is closed.")
+		defer l.Printf("[INFO]: subscribe goroutine is closed.")
 		defer conn.Close()
 		defer unsubscribe(conn, channels, symbols)
 
@@ -247,7 +247,7 @@ func Connect(ctx context.Context, ch chan Response, channels, symbols []string, 
 				ch <- res
 			}
 		}
-		return fmt.Errorf("[INFO]: subscribe gorutine is closed")
+		return fmt.Errorf("[INFO]: subscribe goroutine is closed")
 	})
 
 	return eg.Wait()
@@ -276,7 +276,7 @@ func ConnectForPrivate(ctx context.Context, ch chan Response, key, secret string
 
 	eg, ctx := errgroup.WithContext(ctx)
 	eg.Go(func() error {
-		defer l.Printf("[INFO]: subscribeForPrivate gorutine is closed.")
+		defer l.Printf("[INFO]: subscribeForPrivate goroutine is closed.")
 		defer conn.Close()
 		defer unsubscribe(conn, channels, nil)
 
@@ -354,7 +354,7 @@ func ConnectForPrivate(ctx context.Context, ch chan Response, key, secret string
 				ch <- res
 			}
 		}
-		return fmt.Errorf("[INFO]: subscribeForPrivate gorutine is closed")
+		return fmt.Errorf("[INFO]: subscribeForPrivate goroutine is closed")
 	})
 
 	return eg.Wait()
