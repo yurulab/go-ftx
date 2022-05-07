@@ -117,7 +117,7 @@ func unsubscribe(conn *websocket.Conn, channels, symbols []string) error {
 	return nil
 }
 
-func ping(conn *websocket.Conn) (err error) {
+func ping(ctx context.Context, conn *websocket.Conn) (err error) {
 	ticker := time.NewTicker(15 * time.Second)
 	defer ticker.Stop()
 
@@ -128,6 +128,8 @@ LOOP:
 			if err := conn.WriteMessage(websocket.PingMessage, []byte(`{"op": "pong"}`)); err != nil {
 				break LOOP
 			}
+		case <-ctx.Done():
+			return ctx.Err()
 		}
 	}
 	return err
@@ -148,7 +150,7 @@ func Connect(ctx context.Context, ch chan Response, channels, symbols []string, 
 	}
 
 	// ping each 15sec for exchange
-	go ping(conn)
+	go ping(ctx, conn)
 
 	var cancelled = false
 	eg, ctx := errgroup.WithContext(ctx)
@@ -274,7 +276,7 @@ func ConnectForPrivate(ctx context.Context, ch chan Response, key, secret string
 		return err
 	}
 
-	go ping(conn)
+	go ping(ctx, conn)
 
 	var cancelled = false
 	eg, ctx := errgroup.WithContext(ctx)
